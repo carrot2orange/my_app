@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/carrot2orange/my_app#readme",
   "dependencies": {
+    "ejs": "^2.4.1",
     "express": "^4.13.4"
   }
 }
