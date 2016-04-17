@@ -41,6 +41,7 @@ h2{
   padding: 4px;
 }
 .posts .index ul li>span{
+  width: 90px;
   float:right;
 }
 .posts .index ul li:nth-child(odd){
@@ -48,6 +49,9 @@ h2{
 }
 .posts .index ul li:nth-child(even){
   background-color: #A8D8EF;
+}
+.posts .index ul li.header{
+  background-color: #cccccc;
 }
 .posts .show .body{
   min-height:70px;
