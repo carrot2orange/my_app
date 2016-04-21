@@ -197,9 +197,9 @@ app.put('/users/:id', isLoggedIn, checkUserRegValidation, function(req, res){
     if(user.authenticate(req.body.user.password)){
       if(req.body.user.newPassword){
         //console.log(req.body.user);
-        //req.body.user.password = req.body.user.password;
-        user.password = req.body.user.newPassword;
-        user.save();
+        req.body.user.password = bcrypt.hashSync(req.body.user.newPassword,0);
+        //user.password = req.body.user.newPassword;
+        //user.save();
       } else {
         delete req.body.user.password;
       }
