@@ -17,11 +17,19 @@
   },
   "homepage": "https://github.com/carrot2orange/my_app#readme",
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "body-parser": "^1.15.0",
+    "connect-flash": "^0.1.1",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "jquery": "^2.2.3",
+    "jsdom": "^8.4.0",
     "method": "^2.0.0",
     "method-override": "^2.3.5",
-    "mongoose": "^4.4.12"
+    "mongoose": "^4.4.12",
+    "mongoose-validator": "^1.2.4",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
   }
 }
