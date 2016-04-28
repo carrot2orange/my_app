@@ -150,13 +150,6 @@ app.get('/users/new', function(req, res){
   );
 }); // new
 app.post('/users', checkUserRegValidation, function(req, res, next){
-  /*var user = new User({
-    email: req.body.email,
-    nickname: req.body.nickname,
-    password: req.body.password,
-    createdAt: req.body.createdAt
-  });*/
-  //console.log(user);
   User.create(req.body.user, function(err, user){
     if(err){
       errorHelper(err, next);
@@ -220,7 +213,7 @@ app.put('/users/:id', isLoggedIn, checkUserRegValidation, function(req, res){
 app.get('/posts', function(req,res){
   Post.find({}).populate("author").sort('-createdAt').exec(function(err,posts){
     if(err) return res.json({success:false, message:err});
-    res.render("posts/index", {data:posts, user:req.user});
+    res.render("posts/index", {posts:posts, user:req.user});
   });
 }); // index
 app.get('/posts/new', isLoggedIn, function(req,res){
@@ -236,35 +229,29 @@ app.post('/posts', isLoggedIn, function(req,res){
 app.get('/posts/:id', function(req,res){
   Post.findById(req.params.id).populate("author").exec(function(err,post){
     if(err) return res.json({success:false, message:err});
-    res.render("posts/show", {data:post, user:req.user});
+    res.render("posts/show", {post:post, user:req.user});
   });
 }); // show
 app.get('/posts/:id/edit', isLoggedIn, function(req,res){
   Post.findById(req.params.id, function(err,post){
     if(err) return res.json({success:false, message:err});
     if(!req.user._id.equals(post.author)) return res.json({success:false, message:"Unauthodrized Attempt"});
-    res.render("posts/edit", {data:post, user:req.user});
+    res.render("posts/edit", {post:post, user:req.user});
   });
 }); // edit
 app.put('/posts/:id', isLoggedIn, function(req,res){
   req.body.post.updatedAt=Date.now();
-  Post.findById(req.params.id, function(err, post){
+  Post.findOneAndUpdate({_id:req.params.id, author:req.user._id}, req.body.post, function(err, post){
     if(err) return res.json({success:false, message:err});
-    if(!req.user._id.equals(post.author)) return res.json({success:false, message:"Unauthorized Attempt"});
-  Post.findByIdAndUpdate(req.params.id, req.body.post, function(err,post){
-    if(err) return res.json({success:false, message:err});
+    if(!post) return res.json({success:false, message:"No data found to update"});
     res.redirect('/posts/'+req.params.id);
-  });
  });
 }); // update
 app.delete('/posts/:id', function(req,res){
-  Post.findById(req.params.id, function(err,post){
+  Post.findOneAndRemove({_id:req.params.id, author:req.user._id}, function(err,post){
     if(err) return res.json({success:false, message:err});
-    if(!req.user._id.equals(post.author)) return res.json({success:false, message:"Unauthorized Attempt"});
-  Post.findByIdAndRemove(req.params.id, function(err,post){
-    if(err) return res.json({success:false, message:err});
+    if(!post) return res.json({success:false, message:"No data found to delete"});
     res.redirect('/posts');
-  });
  });
 }); // destroy
 // functions
