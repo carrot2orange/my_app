@@ -108,6 +108,7 @@ footer{
   height: 100px;
 }
 .login .submit_btn,
+.posts .submit_btn,
 .users .submit_btn{
   display: block;
   margin-top: 10px;

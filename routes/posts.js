@@ -10,12 +10,21 @@ router.get('/', function(req,res){
   });
 }); // index
 router.get('/new', isLoggedIn, function(req,res){
-  res.render("posts/new", {user:req.user});
+  res.render("posts/new", {user:req.user,
+                           formPost: req.flash('formPost')[0],
+                           titleError: req.flash('titleError')[0],
+                           bodyError: req.flash('bodyError')[0]
+                          }
+ );
 }); // new
-router.post('/', isLoggedIn, function(req,res){
+router.post('/', isLoggedIn, checkPostValidationN, function(req,res){
   req.body.post.author=req.user._id;
   Post.create(req.body.post, function(err,post){
-    if(err) return res.json({success:false, message:err});
+    if(err){
+      console.log(req.body);
+      console.log(err);
+    return res.json({success:false, message:err});
+    }
     res.redirect('/posts');
   });
 }); // create
@@ -29,7 +38,11 @@ router.get('/:id/edit', isLoggedIn, function(req,res){
   Post.findById(req.params.id, function(err,post){
     if(err) return res.json({success:false, message:err});
     if(!req.user._id.equals(post.author)) return res.json({success:false, message:"Unauthodrized Attempt"});
-    res.render("posts/edit", {post:post, user:req.user});
+    res.render("posts/edit", {post:post,
+                              user:req.user,
+                              formPost: req.flash('formPost')[0],
+                              titleError: req.flash('titleError')[0],
+                              bodyError: req.flash('bodyError')[0]});
   });
 }); // edit
 router.put('/:id', isLoggedIn, function(req,res){
@@ -54,5 +67,31 @@ function isLoggedIn(req, res, next){
   }
   res.redirect('/');
 }
+function checkPostValidationN(req, res, next){
+  var isValid = true;
+  if(req.body.post.title === '' && req.body.post.body === ''){
+    isValid = false;
+    req.flash("formPost", req.body.post);
+    req.flash("titleError", " - This title is required.");
+    req.flash("bodyError", " - This body is required.");
+    res.redirect('/posts/new');
+  }
+  else if(req.body.post.title === ''){
+    isValid = false;
+    req.flash("formPost", req.body.post);
+    req.flash("titleError", " - This title is required.");
+    res.redirect('/posts/new');
+  }
+  else if(req.body.post.body === ''){
+    isValid = false;
+    req.flash("formPost", req.body.post);
+    req.flash("bodyError", " - This body is required.");
+    res.redirect('/posts/new');
+  }
+  else
+    return next();
+}
+
+
 
 module.exports = router;

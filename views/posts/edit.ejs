@@ -16,16 +16,15 @@
 <div class="edit">
   <h3>Edit Post</h3>
   <form class="posts_form" action="/posts/<%=post._id%>?_method=put" method="post">
-    <label>Title</label>
-    <input type="text" name="post[title]" value="<%=post.title%>">
-    <label>Body</label>
-    <textarea name="post[body]"><%=post.body%></textarea>
+    <label>Title<span id="title_error" class="error_message"><%= titleError?titleError:""%></span></label>
+    <input type="text" id="title" name="post[title]" value="<%= formPost?formPost.title:(post?post.title:"") %>">
+    <label>Body<span id="body_error" class="error_message"><%= bodyError?bodyError:""%></span></label>
+    <textarea id="body" name="post[body]"><%= formPost?formPost.body:(post?post.body:"") %></textarea>
     <div class="float_right">Author: <%= user.nickname %></div>
-    <button type="submit">Submit</button>
+    <button type="submit" class="submit_btn">Submit</button>
   </form>
   <a href="javascript:history.back()"><button>Back</button><a>
 </div>
-
 <!-- main end -- >
 </div><!-- posts end -->
 <footer>
