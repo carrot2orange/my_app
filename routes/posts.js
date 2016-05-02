@@ -21,8 +21,8 @@ router.post('/', isLoggedIn, checkPostValidationN, function(req,res){
   req.body.post.author=req.user._id;
   Post.create(req.body.post, function(err,post){
     if(err){
-      console.log(req.body);
-      console.log(err);
+      //console.log(req.body);
+      //console.log(err);
     return res.json({success:false, message:err});
     }
     res.redirect('/posts');

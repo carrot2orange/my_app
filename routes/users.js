@@ -18,8 +18,8 @@ router.get('/new', function(req, res){
 router.post('/', checkUserRegValidation, function(req, res, next){
   User.create(req.body.user, function(err, user){
     if(err){
-      console.log(req.body);
-      console.log(err);
+      //console.log(req.body);
+      //console.log(err);
       return res.json({success:false, message:err});
     }
     res.redirect('/login');
@@ -28,7 +28,7 @@ router.post('/', checkUserRegValidation, function(req, res, next){
 router.get('/:id', isLoggedIn, function(req, res){
   User.findById(req.params.id, function(err, user){
     if(err){
-      console.log(req.body);
+      //console.log(req.body);
       return res.json({success:false, message:err});
     }
     res.render("users/show", {user:user});
@@ -53,7 +53,7 @@ router.put('/:id', isLoggedIn, checkUserRegValidation, function(req, res){
   if(req.user._id != req.params.id) return res.json({success:false, message:"Unauthorized Attempt"});
   User.findById(req.params.id, function(err, user){
     if(err) return res.json({success:"false", message:err});
-    console.log(req.body.user);
+    //console.log(req.body.user);
     if(user.authenticate(req.body.user.password)){
       if(req.body.user.newPassword){
         req.body.user.password = bcrypt.hashSync(req.body.user.newPassword,0);
@@ -115,8 +115,8 @@ function checkUserRegValidation(req, res, next){
   );
 }], function(err, isValid){
       if(err){
-        console.log(req.body);
-        console.log(err);
+        //console.log(req.body);
+        //console.log(err);
         return res.json({success:"false", message:err});
       }
       if(isValid){

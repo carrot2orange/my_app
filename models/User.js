@@ -8,7 +8,7 @@ var userSchema = mongoose.Schema({
   createdAt: {type:Date, default:Date.now}
 });
 userSchema.pre("save", hashPassword);
-userSchema.pre("findOneAndUpdate", function hashPassword(next){
+/*userSchema.pre("findOneAndUpdate", function hashPassword(next){
   console.log(this._update);
   var user = this._update;
   if(!user.newPassword){
@@ -18,7 +18,7 @@ userSchema.pre("findOneAndUpdate", function hashPassword(next){
     user.password = bcrypt.hashSync(user.newPassword,0);
     return next();
   }
-});
+});*/
 userSchema.methods.authenticate = function(password){
   var user = this;
   return bcrypt.compareSync(password, user.password);

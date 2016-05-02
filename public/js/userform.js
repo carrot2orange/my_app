@@ -1,4 +1,4 @@
-document.querySelector("#email_error").innerText = " start userform.js";
+//document.querySelector("#email_error").innerText = " start userform.js";
 if(document.querySelector("#create_user")){
   document.querySelector("#create_user input[type='button']").onclick = function(e){
     var isValid = true;
