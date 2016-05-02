@@ -50,8 +50,8 @@ router.put('/:id', isLoggedIn, function(req,res){
   Post.findOneAndUpdate({_id:req.params.id, author:req.user._id}, req.body.post, function(err, post){
     if(err) return res.json({success:false, message:err});
     if(!post) return res.json({success:false, message:"No data found to update"});
-    res.redirect('/posts/'+req.params.id);
- });
+    checkPostValidationE(req, res);
+});
 }); // update
 router.delete('/:id', function(req,res){
   Post.findOneAndRemove({_id:req.params.id, author:req.user._id}, function(err,post){
@@ -90,6 +90,34 @@ function checkPostValidationN(req, res, next){
   }
   else
     return next();
+}
+function checkPostValidationE(req, res){
+  var isValid = true;
+  Post.findById(req.params.id, function(err,post){
+    if(post.title === '' && post.body === ''){
+      isValid = false;
+      req.flash("formPost", post);
+      req.flash("titleError", " - This title is required.");
+      req.flash("bodyError", " - This body is required.");
+      res.redirect('/posts/'+req.params.id+"/edit");
+    }
+    else if(post.title === ''){
+      isValid = false;
+      req.flash("formPost", post);
+      req.flash("titleError", " - This title is required.");
+      res.redirect('/posts/'+req.params.id+"/edit");
+    }
+    else if(post.body === ''){
+      isValid = false;
+      req.flash("formPost", post);
+      req.flash("bodyError", " - This body is required.");
+      res.redirect('/posts/'+req.params.id+"/edit");
+    }
+    else{
+      res.redirect('/posts/'+req.params.id);
+    }
+
+  });
 }
 
 
